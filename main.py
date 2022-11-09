@@ -64,6 +64,34 @@ def crear_matriz_heuristica():  # La matriz de heuristica es 1 dividido la matri
     matriz_heuristica = 1/matriz_distancias
     return matriz_heuristica
 
+def avanzar_hormiga(i): # Hacemos que una hormiga avance por todos los nodos, para ello buscamos sus nodos por visitar
+    nodos_por_visitar = np.where(memoria[i] == -1)[0]
+    for k in range(numero_nodos - 1):
+        if np.random.rand() < probabilidad_limite:  # Con probabilidad q0 buscamos el nodo que tenga mejor Tij*Nij^b
+            max = 0
+            max_posicion = -1
+            for j in nodos_por_visitar:
+                if feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1]][j]*(matriz_heuristica[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1]][j]**valor_heuristica) > max:
+                    max = feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1]][j]*(matriz_heuristica[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1]][j]**valor_heuristica)
+                    max_posicion = j
+            colonia[i][numero_nodos - nodos_por_visitar.shape[0]] = max_posicion
+            memoria[i][max_posicion] = 1
+            nodos_por_visitar = np.delete(nodos_por_visitar, np.where(nodos_por_visitar == max_posicion))
+        else:                                       # Con probabilidad (1-q0) buscamos un nodo por metodo de la ruleta
+            ruleta = np.array([])
+            for j in nodos_por_visitar:
+                ruleta = np.append(ruleta, feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1]][j]*(matriz_heuristica[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1]][j]**valor_heuristica))
+            ruleta /= np.sum(ruleta)
+            seleccionado = np.random.choice(nodos_por_visitar, 1, p=ruleta)
+            colonia[i][numero_nodos - nodos_por_visitar.shape[0]] = seleccionado
+            memoria[i][seleccionado] = 1
+            nodos_por_visitar = np.delete(nodos_por_visitar, np.where(nodos_por_visitar == seleccionado))
+            # Las actualizaciones de la feromona local se resuelven a continuacion
+        feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 2] ][colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1] ] = (1-evaporacion_feromona)*feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 2] ][colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1] ] + evaporacion_feromona*valor_inicial_feromona
+        feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1] ][colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 2] ] = feromona[colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 2] ][colonia[i][numero_nodos - nodos_por_visitar.shape[0] - 1] ]
+    feromona[colonia[i][0]][colonia[i][numero_nodos - 1] ] = (1-evaporacion_feromona)*feromona[colonia[i][0]][colonia[i][numero_nodos - 1] ] + evaporacion_feromona*valor_inicial_feromona
+    feromona[colonia[i][numero_nodos - 1]][colonia[i][0] ] = feromona[colonia[i][0]][colonia[i][numero_nodos - 1]]
+
 nodos = np.genfromtxt(nodos, dtype = float, delimiter=' ', skip_header = 6, skip_footer=1, usecols=(1,2))
 numero_nodos = nodos.shape[0]
 matriz_distancias = crear_matriz_distancias()
@@ -71,6 +99,14 @@ arreglo_mejor_solucion = crear_solucion_inicial()
 valor_mejor_solucion = calcular_distancia_hormiga(arreglo_mejor_solucion)
 feromona, valor_inicial_feromona = crear_matriz_de_feromonas()
 matriz_heuristica = crear_matriz_heuristica()
-
+while numero_iteraciones > 0 and np.round(valor_mejor_solucion, decimals=4) != 7544.3659:
+    colonia, memoria = crear_colonia_de_hormigas()
+    
+if np.round(valor_mejor_solucion, decimals=4) == 7544.3659:
+    print("Se encontro la solucion")
+    print("Solucion: ", arreglo_mejor_solucion)
+else:
+    print("Solucion no encontrada, mejor solucion: ", valor_mejor_solucion)
+    print("con el arreglo: ", arreglo_mejor_solucion)
 
 
