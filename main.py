@@ -92,6 +92,14 @@ def avanzar_hormiga(i): # Hacemos que una hormiga avance por todos los nodos, pa
     feromona[colonia[i][0]][colonia[i][numero_nodos - 1] ] = (1-evaporacion_feromona)*feromona[colonia[i][0]][colonia[i][numero_nodos - 1] ] + evaporacion_feromona*valor_inicial_feromona
     feromona[colonia[i][numero_nodos - 1]][colonia[i][0] ] = feromona[colonia[i][0]][colonia[i][numero_nodos - 1]]
 
+def actualizar_feromona_global():   # Las actualizaciones de la feromona global se resuelven a continuacion
+    for i in range(numero_nodos - 1):
+        feromona[arreglo_mejor_solucion[i]][arreglo_mejor_solucion[i + 1]] = (1-evaporacion_feromona)*feromona[arreglo_mejor_solucion[i]][arreglo_mejor_solucion[i + 1]] + evaporacion_feromona/valor_mejor_solucion
+        feromona[arreglo_mejor_solucion[i + 1]][arreglo_mejor_solucion[i]] = feromona[arreglo_mejor_solucion[i]][arreglo_mejor_solucion[i + 1]]
+    feromona[arreglo_mejor_solucion[0]][arreglo_mejor_solucion[numero_nodos - 1]] = (1-evaporacion_feromona)*feromona[arreglo_mejor_solucion[0]][arreglo_mejor_solucion[numero_nodos - 1]] + evaporacion_feromona/valor_mejor_solucion
+    feromona[arreglo_mejor_solucion[numero_nodos - 1]][arreglo_mejor_solucion[0]] = feromona[arreglo_mejor_solucion[0]][arreglo_mejor_solucion[numero_nodos - 1]]
+
+
 nodos = np.genfromtxt(nodos, dtype = float, delimiter=' ', skip_header = 6, skip_footer=1, usecols=(1,2))
 numero_nodos = nodos.shape[0]
 matriz_distancias = crear_matriz_distancias()
