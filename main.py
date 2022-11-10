@@ -109,6 +109,15 @@ feromona, valor_inicial_feromona = crear_matriz_de_feromonas()
 matriz_heuristica = crear_matriz_heuristica()
 while numero_iteraciones > 0 and np.round(valor_mejor_solucion, decimals=4) != 7544.3659:
     colonia, memoria = crear_colonia_de_hormigas()
+    for i in range(numero_hormigas):    # Hacemos avanzar una hormiga por todos los nodos antes de continuar con la siguiente
+        avanzar_hormiga(i)
+    for i in range(numero_hormigas):    # Revisamos si alguna encontro un mejor camino al que tenemos
+        if calcular_distancia_hormiga(colonia[i]) < valor_mejor_solucion:
+            valor_mejor_solucion = calcular_distancia_hormiga(colonia[i])
+            arreglo_mejor_solucion = colonia[i]
+    actualizar_feromona_global()
+    feromona *= (1-evaporacion_feromona)    # Evaporacion de la feromona
+    numero_iteraciones -= 1
     
 if np.round(valor_mejor_solucion, decimals=4) == 7544.3659:
     print("Se encontro la solucion")
