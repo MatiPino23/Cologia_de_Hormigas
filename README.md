@@ -42,7 +42,7 @@ Luego de lo anterior, se debe ejecutar la aplicación desde la terminal utilizan
 ```
  a b c d e 
 ```
-python.exe .\main.py 2 .\berlin52.tsp.txt a b c d e f
+python.exe .\main.py 2 .\berlin52.tsp.txt a b c d e
 
 ***
 ## Caso de prueba de la mejor solucion
