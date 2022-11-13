@@ -4,7 +4,7 @@
 ## Introducción
 
 
-La presente tarea 1, correspondiente a la asignatura de Algoritmos Metaheurísticos inspirados en la naturaleza, se desarrolló en el lenguaje de programación Python 3, para la solución del problema del Vendedor viajero mediante el metodo de Sistema de colonia de Hormigas. Los integrantes responsables de la realización de dicha tarea fueron:
+La presente tarea 2, correspondiente a la asignatura de Algoritmos Metaheurísticos inspirados en la naturaleza, se desarrolló en el lenguaje de programación Python 3, para la solución del problema del Vendedor viajero mediante el metodo de Sistema de colonia de Hormigas. Los integrantes responsables de la realización de dicha tarea fueron:
 Matías Pino V. y María Suloaga V.
 
 ## Instalación de entorno
